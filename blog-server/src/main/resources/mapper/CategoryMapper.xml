@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.infrastructure.persistence.mapper.CategoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.blog.domain.entity.Category">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="slug" property="slug"/>
+        <result column="description" property="description"/>
+        <result column="sort_order" property="sortOrder"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="article_count" property="articleCount"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM category WHERE id = #{id}
+    </select>
+
+    <select id="selectBySlug" resultMap="BaseResultMap">
+        SELECT * FROM category WHERE slug = #{slug}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT c.*, (SELECT COUNT(*) FROM article WHERE category_id = c.id AND deleted = 0 AND status = 1) as article_count
+        FROM category c
+        ORDER BY c.sort_order DESC
+    </select>
+
+    <select id="selectAllForWeb" resultMap="BaseResultMap">
+        SELECT c.*, (
+            SELECT COUNT(*)
+            FROM article a
+            WHERE a.category_id = c.id AND a.deleted = 0 AND a.status = 1
+            <if test="includePrivateAll == null or includePrivateAll == false">
+                AND a.visibility = 0
+            </if>
+            <if test="excludeTagName != null and excludeTagName != ''">
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM article_tag at_exclude
+                    INNER JOIN tag t_exclude ON at_exclude.tag_id = t_exclude.id
+                    WHERE at_exclude.article_id = a.id AND t_exclude.name = #{excludeTagName}
+                )
+            </if>
+        ) as article_count
+        FROM category c
+        ORDER BY c.sort_order DESC
+    </select>
+
+    <select id="selectTotalCount" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM category
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO category (name, slug, description, sort_order)
+        VALUES (#{name}, #{slug}, #{description}, #{sortOrder})
+    </insert>
+
+    <update id="update">
+        UPDATE category
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="slug != null">slug = #{slug},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM category WHERE id = #{id}
+    </delete>
+</mapper>

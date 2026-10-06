@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.infrastructure.persistence.mapper.VisitLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.blog.domain.entity.VisitLog">
+        <id column="id" property="id"/>
+        <result column="ip" property="ip"/>
+        <result column="url" property="url"/>
+        <result column="article_id" property="articleId"/>
+        <result column="user_agent" property="userAgent"/>
+        <result column="referer" property="referer"/>
+        <result column="visit_date" property="visitDate"/>
+        <result column="visit_time" property="visitTime"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO visit_log (ip, url, article_id, user_agent, referer, visit_date)
+        VALUES (#{ip}, #{url}, #{articleId}, #{userAgent}, #{referer}, #{visitDate})
+    </insert>
+
+    <select id="selectPvByDate" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM visit_log WHERE visit_date = #{date}
+    </select>
+
+    <select id="selectUvByDate" resultType="java.lang.Long">
+        SELECT COUNT(DISTINCT ip) FROM visit_log WHERE visit_date = #{date}
+    </select>
+
+    <select id="selectPvTrend" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM visit_log
+        WHERE visit_date BETWEEN #{startDate} AND #{endDate}
+        GROUP BY visit_date
+        ORDER BY visit_date
+    </select>
+</mapper>

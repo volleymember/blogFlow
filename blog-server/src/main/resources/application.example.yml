@@ -1,0 +1,65 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: blog-server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+  data:
+    redis:
+      url: ${REDIS_URL:redis://localhost:6379}
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    serialization:
+      write-dates-as-timestamps: false
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.blog.domain.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION_MS:86400000}
+
+blog:
+  storage:
+    qiniu:
+      enabled: ${QINIU_ENABLED:false}
+      access-key: ${QINIU_ACCESS_KEY:}
+      secret-key: ${QINIU_SECRET_KEY:}
+      bucket: ${QINIU_BUCKET:}
+      domain: ${QINIU_DOMAIN:}
+      protocol: ${QINIU_PROTOCOL:https}
+      prefix: ${QINIU_PREFIX:blog}
+      max-file-size: 20MB
+      token-expire-seconds: 3600
+      private-download-enabled: true
+      download-url-expire-seconds: 315360000
+      region: auto
+      connect-timeout-seconds: 10
+      read-timeout-seconds: 60
+      write-timeout-seconds: 60
+      retry-max: 1
+
+logging:
+  level:
+    com.blog: info
+    org.springframework.security: warn

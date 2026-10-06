@@ -1,0 +1,84 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --el-color-primary: #486955;
+  --el-color-primary-light-3: #718c7a;
+  --el-color-primary-light-5: #93a79a;
+  --el-color-primary-light-7: #bac6bd;
+  --el-color-primary-light-8: #d1d9d3;
+  --el-color-primary-light-9: #e9eeea;
+  --el-color-primary-dark-2: #385343;
+  --el-border-radius-base: 8px;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #26302a;
+}
+
+// 自定义滚动条
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dcdfe6;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f7fa;
+}
+
+// 表格样式优化
+.el-table {
+  .el-table__header-wrapper {
+    th {
+      background-color: #f5f7fa !important;
+    }
+  }
+}
+
+// 卡片样式
+.page-card {
+  margin: 20px;
+}
+
+// 搜索栏样式
+.search-bar {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 4px;
+}
+
+// 操作按钮组
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+// Element Plus 在部分主题变量下会让 Select 选中文字继承成浅色，后台表单统一显式覆盖。
+.el-form-item__label,
+.el-input__inner,
+.el-select__placeholder,
+.el-select__selected-item,
+.el-select-dropdown__item {
+  color: #303133 !important;
+}
+
+.el-select__wrapper,
+.el-input__wrapper {
+  background-color: #fff !important;
+}
+
+.el-select-dropdown__item.is-disabled {
+  color: #c0c4cc !important;
+}
